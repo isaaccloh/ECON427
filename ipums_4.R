@@ -17,7 +17,7 @@ namesdf = get_sample_info(collection = 'cps') %>%
   filter(!grepl('ASEC', description)) %>%
   mutate(year = substr(description, nchar(description) - 4 + 1, nchar(description))) %>% 
   mutate(year = as.numeric(year)) %>%
-  filter(year >= 2018) %>% ### FILL THIS IN WITH THE APPROPRIATE STARTING YEAR ###
+  filter(year >= ...) %>% ### FILL THIS IN WITH THE APPROPRIATE STARTING YEAR ###
   filter(!(name %in% c('cps2022_02b', 'cps2022_05b'))) %>%
   pull(name)
 
@@ -38,7 +38,7 @@ cps_data = read_ipums_micro(data_files)
 
 ## Analyzing data (Exercise 1)
 # Data selection
-df_2 = cps_data %>% filter(AGE >= 18 & AGE <= 64  & EMPSTAT >= 10) ### FILL IN THE AGE RANGES TO CONSIDER ###
+df_2 = cps_data %>% filter(AGE >= ... & AGE <=  ... & EMPSTAT >= 10) ### FILL IN THE AGE RANGES TO CONSIDER ###
 
 # Save the data
 save(df_2, file = 'df_2.RData')
