@@ -33,7 +33,8 @@ namesdf = get_sample_info(collection = 'cps') %>%
   pull(name)
 
 ## Extracting data from IPUMS
-cps_extract_request = define_extract_cps(
+cps_extract_request = define_extract_micro(
+  collection = 'cps',
   description = "1964-2023 CPS Data",
   samples = namesdf,
   variables = c("YEAR", "AGE", "EDUC", "INCWAGE", "ASECWT")
