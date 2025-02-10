@@ -17,7 +17,7 @@ namesdf = get_sample_info(collection = 'cps') %>%
   filter(!grepl('ASEC', description)) %>%
   mutate(year = substr(description, nchar(description) - 4 + 1, nchar(description))) %>% 
   mutate(year = as.numeric(year)) %>%
-  filter(year == 2021) %>% ### FILL THIS IN WITH THE APPROPRIATE STARTING YEAR ###
+  ### Filter for the appropriate starting yaer ###
   pull(name)
 
 ## Extracting data from IPUMS
