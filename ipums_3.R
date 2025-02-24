@@ -17,12 +17,17 @@ namesdf = get_sample_info(collection = 'cps') %>%
   filter(!grepl('ASEC', description)) %>%
   mutate(year = substr(description, nchar(description) - 4 + 1, nchar(description))) %>% 
   mutate(year = as.numeric(year)) %>%
-  ### Filter for the appropriate starting yaer ###
+  filter(year == 2021) %>% 
   pull(name)
 
 ## Extracting data from IPUMS
 cps_extract_request = define_extract_micro(
-  ### Fill this in by referencing ipums_2.R and the data explorer exercise for Chapter 3. For the description, you can use '2021 CPS Data' ###
+  collection = 'cps',
+  description = "2021 CPS Data",
+  samples = namesdf,
+  variables = c("YEAR", "SEX", "AGE", "RACE", "HISPAN", 
+                "PAIDHOUR", "EARNWEEK", "HOURWAGE", "UHRSWORK1", 
+                "EDUC", "EARNWT")
 )
 
 submitted_extract = submit_extract(cps_extract_request)
@@ -33,8 +38,11 @@ cps_data = read_ipums_micro(data_files)
 
 ## Analyzing data (Exercise 1)
 # Data selection
-df_2 = cps_data %>% ### Filter for age range and PAIDHOUR ###
-            ### Filter for EARNWEEK, HOURWAGE, UHRSWORK1 nonmissing ###
+df_2 = cps_data %>% filter(AGE >= 16 & AGE <= 69) %>%
+  filter(PAIDHOUR == 1 | PAIDHOUR == 2) %>%
+  filter(!is.na(UHRSWORK1)) %>%
+  filter(!is.na(EARNWEEK)) %>%
+  filter(!is.na(HOURWAGE))
 
 # Save the data
 save(df_2, file = 'df_2.RData')
@@ -43,7 +51,9 @@ save(df_2, file = 'df_2.RData')
 load('df_2.RData')
 
 # Creating variables
-df = df_2 %>% ### Filter for EARNWEEK, UHRSWORK, HOURWAGE values ###
+df = df_2 %>% filter(EARNWEEK > 0 & EARNWEEK < 9999.99) %>%
+  filter(UHRSWORK1 > 0 & UHRSWORK1 < 997) %>%
+  filter(HOURWAGE > 0 & HOURWAGE < 99) %>%
   ### Use mutate to create variable wage equal to EARNWEEK / UHRSWORK1 if PAIDHOUR is 1, otherwise HOURWAGE ###
   ### Mutate to create variable low_wage equal to 1 if wage is $15 or less, otherwise 0 ###
   mutate(race = case_when(
