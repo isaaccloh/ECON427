@@ -1,5 +1,5 @@
-# Clear memory
-rm(list = ls())
+# Clear memory # Making a change
+rm(list = ls()) 
 
 # Set working directory (customize this step with an appropriate folder)
 setwd('C:/Users/lohi/Documents/R')
@@ -93,6 +93,8 @@ results = df %>% group_by(sex) %>%
   ) %>%
   unnest(tidied)
 
+lm(learn ~ educ + exper + expersq, data = df, weights = df$ASECWT)
+
 educ_returns = results %>% filter(term == 'educ') %>%
   select(estimate)
 
@@ -104,6 +106,8 @@ results_year = df %>% group_by(sex, YEAR) %>%
     tidied = map(model, tidy)
   ) %>%
   unnest(tidied)
+
+pnorm(3)
 
 age_earnings_slope = results_year %>% select(term, estimate) %>%
   pivot_wider(names_from = term, values_from = estimate) %>%
